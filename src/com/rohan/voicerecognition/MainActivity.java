@@ -54,7 +54,7 @@ public class MainActivity extends Activity implements OnClickListener {
                     	
                         SendGrid sendgrid = new SendGrid("rohan32", "hackru");
                         sendgrid.addTo("rohanmathur34@gmail.com");
-                        // sendgrid.addTo("mitranopeter@gmail.com");
+                        sendgrid.addTo("mitranopeter@gmail.com");
                         sendgrid.setFrom("rohan@rmathur.com");
                         sendgrid.setSubject("Your " + lectureName + " HELLO study guide here");
                         sendgrid.setText(recognizedText);
