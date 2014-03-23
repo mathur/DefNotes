@@ -167,18 +167,17 @@ public class MainActivity extends Activity implements OnClickListener {
 		try {
 			PdfWriter.getInstance(document,new FileOutputStream(file));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		document.open();
-		Paragraph p = new Paragraph(emailContents);
+		Paragraph p1 = new Paragraph(lectureName);
+		Paragraph p2 = new Paragraph(emailContents);
 		try {
-			document.add(p);
+			document.add(p1);
+			document.add(p2);
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		document.close();		
