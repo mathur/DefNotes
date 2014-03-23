@@ -37,6 +37,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.sendgrid.SendGrid;
+
 public class MainActivity extends Activity implements OnClickListener {
 
 	// TextView tv = (TextView)findViewById(R.id.txtText);
