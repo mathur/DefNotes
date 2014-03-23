@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.speech.RecognizerIntent;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -55,6 +56,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.e("HEY", "LOG TEST");
 		findViewById(R.id.btnVoiceRecognize).setOnClickListener(this);
 		context = this;
+		
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
 	}
 
 	@Override
@@ -144,8 +148,14 @@ public class MainActivity extends Activity implements OnClickListener {
 				.getText().toString();
 		final String lectureName = ((EditText) findViewById(R.id.etLectureName))
 				.getText().toString();
-
-		// new SendGridAsyncTask().execute(userEmail, lectureName, keywords);
+		
+		SendGrid sendgrid = new SendGrid("rohan32", "hackru");
+		sendgrid.addTo(userEmail);
+		sendgrid.setFrom("info@lecmail.com");
+		sendgrid.setSubject("Your " + lectureName + " study guide here");
+		sendgrid.setText(keywords);
+		sendgrid.send();
+		Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT).show();
 	}
 
 	// private class SendGridAsyncTask extends AsyncTask<String, Void, Void> {
