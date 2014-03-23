@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,15 +43,16 @@ public class MainActivity extends Activity implements OnClickListener {
 	        		ArrayList<String> thingsSaid = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 	        		((TextView)findViewById(R.id.txtText)).setText(thingsSaid.get(0));
 	        final String recognizedText = thingsSaid.get(0);
+	        final String lectureName = ((EditText)findViewById(R.id.etLectureName)).getText().toString();
             Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run() {
                     try {
                         SendGrid sendgrid = new SendGrid("rohan32", "hackru");
-                        //sendgrid.addTo("rohanmathur34@gmail.com");
-                        sendgrid.addTo("mitranopeter@gmail.com");
+                        sendgrid.addTo("rohanmathur34@gmail.com");
+                        //sendgrid.addTo("mitranopeter@gmail.com");
                         sendgrid.setFrom("rohan@rmathur.com");
-                        sendgrid.setSubject("Your SubjectName study guide here");
+                        sendgrid.setSubject("Your " + lectureName + " study guide here");
                         sendgrid.setText(recognizedText);
                         sendgrid.send();
                     } catch (Exception e) {
