@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -56,7 +57,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	protected static final int REQUEST_OK = 1;
 
-	public String recognizedText = "", emailContentsHTML = "",emailContentsText="";
+	public String recognizedText = "", emailContentsHTML = "",
+			emailContentsText = "";
 	public static final String intro = "Key Terms/Definitions:",
 			article = "The United States and Russia reached a sweeping agreement on Saturday that called for Syria�s arsenal of chemical weapons to be removed or destroyed by the middle of 2014 and indefinitely stalled the prospect of American airstrikes.The joint announcement, on the third day of intensive talks in Geneva, also set the stage for one of the most challenging undertakings in the history of arms control.�This situation has no precedent,� said Amy E. Smithson, an expert on chemical weapons at theJames Martin Center for Nonproliferation Studies. �They are cramming what would probably be five or six years� worth of work into a period of several months, and they are undertaking this in an extremely difficult security environment due to the ongoing civil war.�",
 			startHtml = "<style type='text/css'>body{font-size: 13;}h1{font-size: 14;font-family:serif;}table,th,td,tr {color:#000;width:700px;}</style><table><tr><td><img border='0' src='http://www.rmathur.com/images/BANNER.png' width=700></td></tr><tr><td><h1>Hey there! Look we what managed to find out about that boring lecture you weren't forced to sit though!</h1></td></tr><tr><td><p wdith=700>",
@@ -152,7 +154,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		if (requestCode == REQUEST_OK && resultCode == RESULT_OK) {
 			ArrayList<String> thingsSaid = data
 					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-			((TextView) findViewById(R.id.txtText)).setText(thingsSaid.get(0));
+			
 			recognizedText = thingsSaid.get(0);
 		}
 
@@ -236,6 +238,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			out.add(params[0]);
 			out.add(output);
 			out.add(params[1]);
+			Log.e("param 0", params[0]);
 			return out;
 		}
 
@@ -243,13 +246,15 @@ public class MainActivity extends Activity implements OnClickListener {
 			String term = out.get(0);
 			String output = out.get(1);
 			String id = out.get(2);
+			Log.e("term", term);
 			try {
 				JSONObject data = new JSONObject(output);
 				JSONArray definitions = data.getJSONArray("definitions");
 				if (definitions.length() > 0) {
 					JSONObject definition = definitions.getJSONObject(0);
 					String definitionText = definition.getString("text");
-					emailContentsHTML += term + " : " + definitionText + "<br><br>";
+					emailContentsHTML += term + " : " + definitionText
+							+ "<br><br>";
 					emailContentsText += term + " : " + definitionText + "\n\n";
 				}
 				if (Integer.parseInt(id) >= keywordsList.size() - 1) {
@@ -265,9 +270,17 @@ public class MainActivity extends Activity implements OnClickListener {
 	public String postDictionaryData(String word) {
 		HttpClient httpclient = new DefaultHttpClient();
 		// specify the URL you want to post to
+		StringTokenizer stk = new StringTokenizer(word);
+		String firstWord;
+		if (stk.hasMoreTokens()) {
+			firstWord = stk.nextToken();
+		} else {
+			firstWord = word;
+		}
+
 		HttpPost httppost = new HttpPost(
 				"https://montanaflynn-dictionary.p.mashape.com/define?word="
-						+ word);
+						+ firstWord);
 		try {
 
 			httppost.addHeader("X-Mashape-Authorization",
@@ -275,7 +288,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
 			// send the variable and value, in other words post, to the URL
 			HttpResponse response = httpclient.execute(httppost);
-
 			// parse
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					response.getEntity().getContent(), "UTF-8"));
