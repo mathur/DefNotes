@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/Goldenrod"
     tools:context=".MainActivity" >
 
     <EditText
@@ -71,8 +72,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:background="@color/WhiteSmoke"
         android:onClick="parseData"
-        android:text="Send Lecture via Email" />
+        android:text="@string/submit"
+        android:textColor="@color/Black" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -85,15 +88,20 @@
             android:id="@+id/rawText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Raw Text" 
-            android:onClick="startRawText" />
+            android:layout_margin="10dp"
+            android:background="@color/WhiteSmoke"
+            android:onClick="startRawText"
+            android:text="Raw Text" />
 
         <Button
             android:id="@+id/keywords"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Keywords"
-            android:onClick="startKeywords" />
+            android:layout_margin="10dp"
+            android:background="@color/WhiteSmoke"
+            android:onClick="startKeywords"
+            android:text="Keywords" />
+
     </LinearLayout>
 
 </RelativeLayout>

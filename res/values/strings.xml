@@ -3,5 +3,6 @@
 
     <string name="app_name">DefNotes</string>
     <string name="action_about">About</string>
+    <string name="submit">submit</string>
 
 </resources>
