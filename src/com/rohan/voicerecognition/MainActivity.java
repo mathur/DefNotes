@@ -4,24 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.FileOutputStream;
-import java.util.Date;
-
-import com.itextpdf.text.Anchor;
-import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chapter;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.ListItem;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Section;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -69,15 +51,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	ArrayList<String> keywordsList = new ArrayList<String>(),
 			definitions = new ArrayList<String>();
 	Context context;
-	private static String FILE = "c:/temp/FirstPdf.pdf";
-	private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
-      Font.BOLD);
-	private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
-	  Font.NORMAL, BaseColor.RED);
-	private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
-	  Font.BOLD);
-	private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
-	  Font.BOLD);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,17 +148,17 @@ public class MainActivity extends Activity implements OnClickListener {
 				.getText().toString();
 		final String lectureName = ((EditText) findViewById(R.id.etLectureName))
 				.getText().toString();
-
+		
 		SendGrid sendgrid = new SendGrid("rohan32", "hackru");
 		sendgrid.addTo(userEmail);
 		sendgrid.setFrom("info@lecmail.com");
 		sendgrid.setSubject("Your " + lectureName + " study guide here");
-		sendgrid.setText(intro+" \n\n "+emailContents);
+		sendgrid.setText(intro+" \n\n " + emailContents);
 		sendgrid.send();
 		Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT)
 				.show();
 	}
-
+	
 	public void findDefinitions() {
 		for (int i = 0; i < keywordsList.size(); i++) {
 			String term = keywordsList.get(i);
