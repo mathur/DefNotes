@@ -4,6 +4,24 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileOutputStream;
+import java.util.Date;
+
+import com.itextpdf.text.Anchor;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chapter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.ListItem;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Section;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -46,11 +64,20 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	public String recognizedText = "",
 			emailContents = "",
-			article = "The United States and Russia reached a sweeping agreement on Saturday that called for Syria’s arsenal of chemical weapons to be removed or destroyed by the middle of 2014 and indefinitely stalled the prospect of American airstrikes.The joint announcement, on the third day of intensive talks in Geneva, also set the stage for one of the most challenging undertakings in the history of arms control.“This situation has no precedent,” said Amy E. Smithson, an expert on chemical weapons at theJames Martin Center for Nonproliferation Studies. “They are cramming what would probably be five or six years’ worth of work into a period of several months, and they are undertaking this in an extremely difficult security environment due to the ongoing civil war.”";
+			article = "The United States and Russia reached a sweeping agreement on Saturday that called for Syriaï¿½s arsenal of chemical weapons to be removed or destroyed by the middle of 2014 and indefinitely stalled the prospect of American airstrikes.The joint announcement, on the third day of intensive talks in Geneva, also set the stage for one of the most challenging undertakings in the history of arms control.ï¿½This situation has no precedent,ï¿½ said Amy E. Smithson, an expert on chemical weapons at theJames Martin Center for Nonproliferation Studies. ï¿½They are cramming what would probably be five or six yearsï¿½ worth of work into a period of several months, and they are undertaking this in an extremely difficult security environment due to the ongoing civil war.ï¿½";
 	public static final String intro = "Hey there! look we what managed to find out about that boring lecture you weren't forced to sit though! We learne sooooooo much ;)";
 	ArrayList<String> keywordsList = new ArrayList<String>(),
 			definitions = new ArrayList<String>();
 	Context context;
+	private static String FILE = "c:/temp/FirstPdf.pdf";
+	private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
+      Font.BOLD);
+	private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
+	  Font.NORMAL, BaseColor.RED);
+	private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+	  Font.BOLD);
+	private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
+	  Font.BOLD);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
