@@ -178,7 +178,7 @@ public class MainActivity extends Activity implements OnClickListener {
         DateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss");
 		
 		Document document = new Document();
-		String file = Environment.getExternalStorageDirectory().getPath() + "/" + dateFormat.format(date) + ".pdf";
+		String file = Environment.getExternalStorageDirectory().getPath() + "/" + dateFormat.format(date) + "deflecture.pdf";
 		try {
 			PdfWriter.getInstance(document,new FileOutputStream(file));
 		} catch (FileNotFoundException e) {
