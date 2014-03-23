@@ -144,7 +144,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void sendEmail() {
 
 		Toast.makeText(getApplicationContext(), "sending email",
-				Toast.LENGTH_LONG).show();
+				Toast.LENGTH_SHORT).show();
 
 		final String userEmail = ((EditText) findViewById(R.id.editText1))
 				.getText().toString();
@@ -243,7 +243,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		protected void onPostExecute(String output) {
 			Toast.makeText(getApplicationContext(), "command sent",
-					Toast.LENGTH_LONG).show();
+					Toast.LENGTH_SHORT).show();
 			try {
 				JSONObject data = new JSONObject(output);
 				JSONArray keywords = data.getJSONArray("keywords");
