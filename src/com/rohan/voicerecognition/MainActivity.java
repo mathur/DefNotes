@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	// TextView tv = (TextView)findViewById(R.id.txtText);
 
 	protected static final int REQUEST_OK = 1;
-	public static String text = "In any case, the deal was at least a temporary reprieve for President Bashar al-Assad and his Syrian government, and it formally placed international decision-making about Syria into the purview of Russia, one of Mr. Assad’s staunchest supporters and military suppliers.That reality was bitterly seized on by the fractured Syrian rebel forces, most of which have pleaded for American airstrikes. Gen. Salim Idris, the head of the Western-backed rebels’ nominal military command, the Supreme Military Council, denounced the initiative.";
+	public static String text = "In any case, the deal was at least a temporary reprieve for President Bashar al-Assad and his Syrian government, and it formally placed international decision-making about Syria into the purview of Russia, one of Mr. Assadï¿½s staunchest supporters and military suppliers.That reality was bitterly seized on by the fractured Syrian rebel forces, most of which have pleaded for American airstrikes. Gen. Salim Idris, the head of the Western-backed rebelsï¿½ nominal military command, the Supreme Military Council, denounced the initiative.";
 
 	public String recognizedText = "";
 	Context context;
@@ -167,6 +167,13 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		new MyAsyncTask().execute();
+		Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+		i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+		try {
+			startActivityForResult(i, REQUEST_OK);
+		} catch (Exception e) {
+		    Toast.makeText(this, "Error initializing speech to text engine.", Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	@Override
