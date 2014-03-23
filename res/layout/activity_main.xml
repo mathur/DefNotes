@@ -4,25 +4,34 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/txtText"
+    <EditText
+        android:id="@+id/etLectureName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="132dp"
-        android:text="..." >
-    </TextView>
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
 
     <ImageButton
         android:id="@+id/btnVoiceRecognize"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtText"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/etLectureName"
         android:layout_margin="10dp"
-        android:layout_marginTop="37dp"
-        android:src="@android:drawable/ic_btn_speak_now" >
-    </ImageButton>
+        android:src="@android:drawable/ic_btn_speak_now" />
+
+    <TextView
+        android:id="@+id/txtText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/btnVoiceRecognize"
+        android:text="..." />
 
 </RelativeLayout>
