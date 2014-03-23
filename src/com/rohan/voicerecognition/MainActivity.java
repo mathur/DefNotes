@@ -136,36 +136,37 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	public void sendEmail(final String keywords) {
-		
+
 		Toast.makeText(getApplicationContext(), "sending email",
 				Toast.LENGTH_LONG).show();
-		
-		final String lectureName = ((EditText) findViewById(R.id.etLectureName))
-				.getText().toString();
+
 		final String userEmail = ((EditText) findViewById(R.id.editText1))
 				.getText().toString();
+		final String lectureName = ((EditText) findViewById(R.id.etLectureName))
+				.getText().toString();
 
-		Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					SendGrid sendgrid = new SendGrid("rohan32", "hackru");
-					sendgrid.addTo(userEmail);
-					sendgrid.setFrom("info@lecmail.com");
-					sendgrid.setSubject("Your " + lectureName
-							+ " study guide here");
-					sendgrid.setText(keywords);
-					sendgrid.send();
-					Toast.makeText(context, "Email sent successfully.",
-							Toast.LENGTH_SHORT).show();
-				} catch (Exception e) {
-					Log.e("errorrr",e.getMessage());
-				}
-			}
-		});
-
-		thread.start();
+		// new SendGridAsyncTask().execute(userEmail, lectureName, keywords);
 	}
+
+	// private class SendGridAsyncTask extends AsyncTask<String, Void, Void> {
+	// @Override
+	// protected Void doInBackground(String... params) {
+	// SendGrid sendgrid = new SendGrid("rohan32", "hackru");
+	// sendgrid.addTo(params[0]);
+	// sendgrid.setFrom("info@lecmail.com");
+	// sendgrid.setSubject("Your " + params[1] + " study guide here");
+	// sendgrid.setText(params[1]);
+	// sendgrid.send();
+	// Toast.makeText(context, "Email sent successfully.",
+	// Toast.LENGTH_SHORT).show();
+	// return null;
+	// }
+	//
+	// protected void onPostExecute() {
+	//
+	// }
+	//
+	// }
 
 	private class MyAsyncTask extends AsyncTask<String, String, String> {
 		@Override
