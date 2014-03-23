@@ -119,8 +119,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     sendgrid.setFrom("info@lecmail.com");
                     sendgrid.setSubject("Your " + lectureName + " study guide here");
                     sendgrid.setText(recognizedText);
-                    Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT).show();
                     sendgrid.send();
+                    Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
