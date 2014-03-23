@@ -2,8 +2,6 @@ package com.rohan.voicerecognition;
 
 import java.util.ArrayList;
 
-import com.github.sendgrid.SendGrid;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,15 +11,20 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.sendgrid.SendGrid;
+import com.orchestr8.android.api.AlchemyAPI;
+
 public class MainActivity extends Activity implements OnClickListener {
 
 	protected static final int REQUEST_OK = 1;
+	public String AlchemyAPI_Key = "c43827ddcf36ade5d12e3846edc787415e6840ae";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		findViewById(R.id.btnVoiceRecognize).setOnClickListener(this);
+		AlchemyAPI api;
 	}
 	
 	@Override
@@ -38,16 +41,18 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	        super.onActivityResult(requestCode, resultCode, data);
+	        
 	        if (requestCode == REQUEST_OK  && resultCode == RESULT_OK) {
 	        		ArrayList<String> thingsSaid = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 	        		((TextView)findViewById(R.id.txtText)).setText(thingsSaid.get(0));
 	        final String recognizedText = thingsSaid.get(0);
+	        
             Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run() {
                     try {
+                    	
                         SendGrid sendgrid = new SendGrid("rohan32", "hackru");
-                        //sendgrid.addTo("rohanmathur34@gmail.com");
                         sendgrid.addTo("mitranopeter@gmail.com");
                         sendgrid.setFrom("rohan@rmathur.com");
                         sendgrid.setSubject("Your SubjectName study guide here");
@@ -62,7 +67,4 @@ public class MainActivity extends Activity implements OnClickListener {
             thread.start();
 	        }
 	    }
-
-
-
 }
