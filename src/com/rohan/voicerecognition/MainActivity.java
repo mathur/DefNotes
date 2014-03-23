@@ -53,7 +53,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Log.e("HEY", "LOG TEST");
 		findViewById(R.id.btnVoiceRecognize).setOnClickListener(this);
 		context = this;
 		
@@ -69,10 +68,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.about:
-			// if about is pressed, then open the dialog box
 			showDialog(1);
 			return true;
 		default:
@@ -85,7 +82,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case 1:
-			// Create our About Dialog
 			TextView aboutMsg = new TextView(this);
 			aboutMsg.setMovementMethod(LinkMovementMethod.getInstance());
 			aboutMsg.setPadding(30, 30, 30, 30);
@@ -141,7 +137,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	public void sendEmail(final String keywords) {
 
-		Toast.makeText(getApplicationContext(), "sending email",
+		Toast.makeText(getApplicationContext(), "Sending Email",
 				Toast.LENGTH_SHORT).show();
 
 		final String userEmail = ((EditText) findViewById(R.id.editText1))
