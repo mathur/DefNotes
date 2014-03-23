@@ -17,7 +17,6 @@ import com.github.sendgrid.SendGrid;
 public class MainActivity extends Activity implements OnClickListener {
 
 	protected static final int REQUEST_OK = 1;
-	public String AlchemyAPI_Key = "c43827ddcf36ade5d12e3846edc787415e6840ae";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class MainActivity extends Activity implements OnClickListener {
                         sendgrid.addTo("rohanmathur34@gmail.com");
                         sendgrid.addTo("mitranopeter@gmail.com");
                         sendgrid.setFrom("rohan@rmathur.com");
-                        sendgrid.setSubject("Your " + lectureName + " HELLO study guide here");
+                        sendgrid.setSubject("Your " + lectureName + " study guide here");
                         sendgrid.setText(recognizedText);
                         sendgrid.send();
                     } catch (Exception e) {
