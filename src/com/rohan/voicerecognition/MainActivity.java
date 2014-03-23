@@ -195,7 +195,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				for (int i = 0; i < keywords.length(); i++) {
 					JSONObject keyword = keywords.getJSONObject(i);
 					String text = keyword.get("text").toString();
-					keywordString += text;
+					keywordString += "\n" + text;
 					Log.e("text" + i, text);
 				}
 				sendEmail(keywordString);
