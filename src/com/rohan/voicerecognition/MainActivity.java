@@ -1,9 +1,14 @@
 package com.rohan.voicerecognition;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -25,6 +30,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
 import android.text.Html;
@@ -39,6 +45,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sendgrid.SendGrid;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -148,6 +158,30 @@ public class MainActivity extends Activity implements OnClickListener {
 				.getText().toString();
 		final String lectureName = ((EditText) findViewById(R.id.etLectureName))
 				.getText().toString();
+		
+    	Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss");
+		
+		Document document = new Document();
+		String file = Environment.getExternalStorageDirectory().getPath() + "/" + dateFormat.format(date) + ".pdf";
+		try {
+			PdfWriter.getInstance(document,new FileOutputStream(file));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		document.open();
+		Paragraph p = new Paragraph(emailContents);
+		try {
+			document.add(p);
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		document.close();		
 		
 		SendGrid sendgrid = new SendGrid("rohan32", "hackru");
 		sendgrid.addTo(userEmail);
