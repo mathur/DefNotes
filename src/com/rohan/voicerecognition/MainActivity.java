@@ -47,7 +47,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	public String recognizedText = "",
 			emailContents = "",
 			article = "The United States and Russia reached a sweeping agreement on Saturday that called for Syria’s arsenal of chemical weapons to be removed or destroyed by the middle of 2014 and indefinitely stalled the prospect of American airstrikes.The joint announcement, on the third day of intensive talks in Geneva, also set the stage for one of the most challenging undertakings in the history of arms control.“This situation has no precedent,” said Amy E. Smithson, an expert on chemical weapons at theJames Martin Center for Nonproliferation Studies. “They are cramming what would probably be five or six years’ worth of work into a period of several months, and they are undertaking this in an extremely difficult security environment due to the ongoing civil war.”";
-	public static final String intro = "Hey there! look we what managed to find out about that boring lecture you weren't forced to sit though! We learne sooooooo much ;)";
+	public static final String intro = "Hey there! look we what managed to find out about that boring lecture you weren't forced to sit though! We learned sooooooo much ;)",
+			html = "<style type='text/css'>h1{font-size: 16;color:#000033;font-family:serif;}</style><img border='0' src='http://www.rmathur.com/images/BANNER.png'><h1>Hey there! look we what managed to find out about that boring lecture you weren't forced to sit though!</h1><br>";
 	ArrayList<String> keywordsList = new ArrayList<String>(),
 			definitions = new ArrayList<String>();
 	Context context;
@@ -56,7 +57,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Log.e("HEY", "LOG TEST");
 		findViewById(R.id.btnVoiceRecognize).setOnClickListener(this);
 		context = this;
 
@@ -157,7 +157,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		sendgrid.addTo(userEmail);
 		sendgrid.setFrom("info@lecmail.com");
 		sendgrid.setSubject("Your " + lectureName + " study guide here");
-		sendgrid.setText(intro+" \n\n "+emailContents);
+		sendgrid.setHtml(html+emailContents);
+		sendgrid.setText("\n\n " + emailContents);
 		sendgrid.send();
 		Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT)
 				.show();
