@@ -1,4 +1,4 @@
-package com.rohan.voicerecognition;
+ï»¿package com.rohan.voicerecognition;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,19 +39,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sendgrid.SendGrid;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Font;
 
 public class MainActivity extends Activity implements OnClickListener {
 
 	protected static final int REQUEST_OK = 1;
 
-	public String recognizedText = "",
-			emailContents = "",
-			article = "The United States and Russia reached a sweeping agreement on Saturday that called for Syria’s arsenal of chemical weapons to be removed or destroyed by the middle of 2014 and indefinitely stalled the prospect of American airstrikes.The joint announcement, on the third day of intensive talks in Geneva, also set the stage for one of the most challenging undertakings in the history of arms control.“This situation has no precedent,” said Amy E. Smithson, an expert on chemical weapons at theJames Martin Center for Nonproliferation Studies. “They are cramming what would probably be five or six years’ worth of work into a period of several months, and they are undertaking this in an extremely difficult security environment due to the ongoing civil war.”";
-	public static final String intro = "Hey there! look we what managed to find out about that boring lecture you weren't forced to sit though! We learned sooooooo much ;)",
-			html = "<style type='text/css'>h1{font-size: 16;color:#000033;font-family:serif;}</style><img border='0' src='http://www.rmathur.com/images/BANNER.png'><h1>Hey there! look we what managed to find out about that boring lecture you weren't forced to sit though!</h1><br>";
+	public String recognizedText = "", emailContents = "";
+	public static final String intro = "Key Terms/Definitions:",
+			article = "The United States and Russia reached a sweeping agreement on Saturday that called for Syriaï¿½s arsenal of chemical weapons to be removed or destroyed by the middle of 2014 and indefinitely stalled the prospect of American airstrikes.The joint announcement, on the third day of intensive talks in Geneva, also set the stage for one of the most challenging undertakings in the history of arms control.ï¿½This situation has no precedent,ï¿½ said Amy E. Smithson, an expert on chemical weapons at theJames Martin Center for Nonproliferation Studies. ï¿½They are cramming what would probably be five or six yearsï¿½ worth of work into a period of several months, and they are undertaking this in an extremely difficult security environment due to the ongoing civil war.ï¿½",
+			startHtml = "<style type='text/css'>body{font-size: 13;}h1{font-size: 14;font-family:serif;}table,th,td,tr {color:#000;width:700px;}</style><table><tr><td><img border='0' src='http://www.rmathur.com/images/BANNER.png' width=700></td></tr><tr><td><h1>Hey there! Look we what managed to find out about that boring lecture you weren't forced to sit though!</h1></td></tr><tr><td><p wdith=700>",
+			endHtml = "</p></td></tr></table>";
+
 	ArrayList<String> keywordsList = new ArrayList<String>(),
 			definitions = new ArrayList<String>();
 	Context context;
+	private static String FILE = "c:/temp/FirstPdf.pdf";
+	private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
+			Font.BOLD);
+	private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
+			Font.NORMAL, BaseColor.RED);
+	private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+			Font.BOLD);
+	private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
+			Font.BOLD);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +85,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.about:
-			// if about is pressed, then open the dialog box
 			showDialog(1);
 			return true;
 		default:
@@ -89,7 +99,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case 1:
-			// Create our About Dialog
 			TextView aboutMsg = new TextView(this);
 			aboutMsg.setMovementMethod(LinkMovementMethod.getInstance());
 			aboutMsg.setPadding(30, 30, 30, 30);
@@ -145,7 +154,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	public void sendEmail() {
 
-		Toast.makeText(getApplicationContext(), "sending email",
+		Toast.makeText(getApplicationContext(), "Sending Email",
 				Toast.LENGTH_SHORT).show();
 
 		final String userEmail = ((EditText) findViewById(R.id.editText1))
@@ -155,10 +164,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		SendGrid sendgrid = new SendGrid("rohan32", "hackru");
 		sendgrid.addTo(userEmail);
-		sendgrid.setFrom("info@lecmail.com");
+		sendgrid.setFrom("DefNotes@defnotes.com");
 		sendgrid.setSubject("Your " + lectureName + " study guide here");
-		sendgrid.setHtml(html+emailContents);
-		sendgrid.setText("\n\n " + emailContents);
+		sendgrid.setHtml(startHtml + emailContents + endHtml);
 		sendgrid.send();
 		Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT)
 				.show();
@@ -188,15 +196,13 @@ public class MainActivity extends Activity implements OnClickListener {
 			String term = out.get(0);
 			String output = out.get(1);
 			String id = out.get(2);
-			Toast.makeText(getApplicationContext(), "command sent",
-					Toast.LENGTH_LONG).show();
 			try {
 				JSONObject data = new JSONObject(output);
 				JSONArray definitions = data.getJSONArray("definitions");
 				if (definitions.length() > 0) {
 					JSONObject definition = definitions.getJSONObject(0);
 					String definitionText = definition.getString("text");
-					emailContents += term + " : " + definitionText + "\n\n";
+					emailContents += term + " : " + definitionText + "<br><br>";
 				}
 				if (Integer.parseInt(id) >= keywordsList.size() - 1) {
 					sendEmail();
@@ -245,8 +251,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 
 		protected void onPostExecute(String output) {
-			Toast.makeText(getApplicationContext(), "command sent",
-					Toast.LENGTH_SHORT).show();
 			try {
 				JSONObject data = new JSONObject(output);
 				JSONArray keywords = data.getJSONArray("keywords");
