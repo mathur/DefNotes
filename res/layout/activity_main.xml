@@ -33,7 +33,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/btnVoiceRecognize"
         android:layout_marginBottom="15dp"
-        android:onClick="sendEmail"
+        android:onClick="parseData"
         android:text="Send Lecture via Email" />
 
     <ImageButton
