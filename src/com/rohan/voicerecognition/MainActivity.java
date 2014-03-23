@@ -42,11 +42,14 @@ import com.github.sendgrid.SendGrid;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	// TextView tv = (TextView)findViewById(R.id.txtText);
-
 	protected static final int REQUEST_OK = 1;
 
-	public String recognizedText = "";
+	public String recognizedText = "",
+			emailContents = "",
+			article = "The United States and Russia reached a sweeping agreement on Saturday that called for Syria’s arsenal of chemical weapons to be removed or destroyed by the middle of 2014 and indefinitely stalled the prospect of American airstrikes.The joint announcement, on the third day of intensive talks in Geneva, also set the stage for one of the most challenging undertakings in the history of arms control.“This situation has no precedent,” said Amy E. Smithson, an expert on chemical weapons at theJames Martin Center for Nonproliferation Studies. “They are cramming what would probably be five or six years’ worth of work into a period of several months, and they are undertaking this in an extremely difficult security environment due to the ongoing civil war.”";
+	public static final String intro = "Hey there! look we what managed to find out about that boring lecture you weren't forced to sit though! We learne sooooooo much ;)";
+	ArrayList<String> keywordsList = new ArrayList<String>(),
+			definitions = new ArrayList<String>();
 	Context context;
 
 	@Override
@@ -55,8 +58,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_main);
 		findViewById(R.id.btnVoiceRecognize).setOnClickListener(this);
 		context = this;
-		
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+				.permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 	}
 
@@ -132,10 +136,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	public void parseData(View view) {
-		new MyAsyncTask().execute();
+		new AlchemyAsyncTask().execute();
 	}
 
-	public void sendEmail(final String keywords) {
+	public void sendEmail() {
 
 		Toast.makeText(getApplicationContext(), "Sending Email",
 				Toast.LENGTH_SHORT).show();
@@ -144,40 +148,94 @@ public class MainActivity extends Activity implements OnClickListener {
 				.getText().toString();
 		final String lectureName = ((EditText) findViewById(R.id.etLectureName))
 				.getText().toString();
-		
+
 		SendGrid sendgrid = new SendGrid("rohan32", "hackru");
 		sendgrid.addTo(userEmail);
 		sendgrid.setFrom("info@lecmail.com");
 		sendgrid.setSubject("Your " + lectureName + " study guide here");
-		sendgrid.setText(keywords);
+		sendgrid.setText(intro+" \n\n "+emailContents);
 		sendgrid.send();
-		Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT)
+				.show();
 	}
 
-	// private class SendGridAsyncTask extends AsyncTask<String, Void, Void> {
-	// @Override
-	// protected Void doInBackground(String... params) {
-	// SendGrid sendgrid = new SendGrid("rohan32", "hackru");
-	// sendgrid.addTo(params[0]);
-	// sendgrid.setFrom("info@lecmail.com");
-	// sendgrid.setSubject("Your " + params[1] + " study guide here");
-	// sendgrid.setText(params[1]);
-	// sendgrid.send();
-	// Toast.makeText(context, "Email sent successfully.",
-	// Toast.LENGTH_SHORT).show();
-	// return null;
-	// }
-	//
-	// protected void onPostExecute() {
-	//
-	// }
-	//
-	// }
+	public void findDefinitions() {
+		for (int i = 0; i < keywordsList.size(); i++) {
+			String term = keywordsList.get(i);
+			new DictionaryAsyncTask().execute(term, i + "");
+		}
+	}
 
-	private class MyAsyncTask extends AsyncTask<String, String, String> {
+	private class DictionaryAsyncTask extends
+			AsyncTask<String, String, ArrayList<String>> {
+		@Override
+		// params[0] is term, params[1] is term number
+		protected ArrayList<String> doInBackground(String... params) {
+			ArrayList<String> out = new ArrayList<String>();
+			String output = postDictionaryData(params[0]);
+			out.add(params[0]);
+			out.add(output);
+			out.add(params[1]);
+			return out;
+		}
+
+		protected void onPostExecute(ArrayList<String> out) {
+			String term = out.get(0);
+			String output = out.get(1);
+			String id = out.get(2);
+			Toast.makeText(getApplicationContext(), "command sent",
+					Toast.LENGTH_LONG).show();
+			try {
+				JSONObject data = new JSONObject(output);
+				JSONArray definitions = data.getJSONArray("definitions");
+				if (definitions.length() > 0) {
+					JSONObject definition = definitions.getJSONObject(0);
+					String definitionText = definition.getString("text");
+					emailContents += term + " : " + definitionText + "\n\n";
+				}
+				if (Integer.parseInt(id) >= keywordsList.size() - 1) {
+					sendEmail();
+				}
+			} catch (JSONException e) {
+				Log.e("error", e.getMessage());
+			}
+		}
+
+	}
+
+	public String postDictionaryData(String word) {
+		HttpClient httpclient = new DefaultHttpClient();
+		// specify the URL you want to post to
+		HttpPost httppost = new HttpPost(
+				"https://montanaflynn-dictionary.p.mashape.com/define?word="
+						+ word);
+		try {
+
+			httppost.addHeader("X-Mashape-Authorization",
+					"KTGQojeCF3QsYcBoz5dJpz6679Cbgvqz");
+
+			// send the variable and value, in other words post, to the URL
+			HttpResponse response = httpclient.execute(httppost);
+
+			// parse
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent(), "UTF-8"));
+			StringBuilder builder = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				builder.append(line).append("\n");
+			}
+			return builder.toString();
+		} catch (Exception e) {
+			Log.e("error", e.getMessage());
+		}
+		return null;
+	}
+
+	private class AlchemyAsyncTask extends AsyncTask<String, String, String> {
 		@Override
 		protected String doInBackground(String... params) {
-			String output = postData();
+			String output = postAlchemyData();
 			return output;
 		}
 
@@ -187,14 +245,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			try {
 				JSONObject data = new JSONObject(output);
 				JSONArray keywords = data.getJSONArray("keywords");
-				String keywordString = "";
 				for (int i = 0; i < keywords.length(); i++) {
 					JSONObject keyword = keywords.getJSONObject(i);
 					String text = keyword.get("text").toString();
-					keywordString += "\n" + text;
-					Log.e("text" + i, text);
+					keywordsList.add(text);
 				}
-				sendEmail(keywordString);
+				findDefinitions();
 			} catch (JSONException e) {
 				Log.e("error", e.getMessage());
 			}
@@ -202,17 +258,17 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	}
 
-	public String postData() {
+	public String postAlchemyData() {
 		HttpClient httpclient = new DefaultHttpClient();
 		// specify the URL you want to post to
 		HttpPost httppost = new HttpPost(
 				"http://access.alchemyapi.com/calls/text/TextGetRankedKeywords");
 		try {
-
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 			pairs.add(new BasicNameValuePair("apikey",
 					"65339f480b58cb7d9e4dcd3728e4c4cfeca2ffa6"));
 			pairs.add(new BasicNameValuePair("text", recognizedText));
+			// pairs.add(new BasicNameValuePair("text", article));
 			pairs.add(new BasicNameValuePair("outputMode", "json"));
 			httppost.setEntity(new UrlEncodedFormEntity(pairs));
 			// send the variable and value, in other words post, to the URL
