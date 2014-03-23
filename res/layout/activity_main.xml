@@ -25,17 +25,6 @@
         android:layout_alignParentLeft="true"
         android:text="Lecture Name" />
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btnVoiceRecognize"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/btnVoiceRecognize"
-        android:layout_marginBottom="15dp"
-        android:onClick="parseData"
-        android:text="Send Lecture via Email" />
-
     <ImageButton
         android:id="@+id/btnVoiceRecognize"
         android:layout_width="fill_parent"
@@ -53,22 +42,58 @@
         android:layout_centerHorizontal="true"
         android:text="" />
 
-    <EditText
-        android:id="@+id/editText1"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/textView2"
-        android:ems="10" />
+        android:layout_alignTop="@+id/txtText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp" >
 
-    <TextView
-        android:id="@+id/textView2"
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Email" />
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="16dp"
-        android:text="Email" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="parseData"
+        android:text="Send Lecture via Email" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="72dp" >
+
+        <Button
+            android:id="@+id/rawText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Raw Text" 
+            android:onClick="startRawText" />
+
+        <Button
+            android:id="@+id/keywords"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Keywords"
+            android:onClick="startKeywords" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -45,11 +45,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sendgrid.SendGrid;
-
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Font;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -57,8 +56,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	protected static final int REQUEST_OK = 1;
 
-
-	public String recognizedText = "", emailContents = "";
+	public String recognizedText = "", emailContentsHTML = "",emailContentsText="";
 	public static final String intro = "Key Terms/Definitions:",
 			article = "The United States and Russia reached a sweeping agreement on Saturday that called for Syria�s arsenal of chemical weapons to be removed or destroyed by the middle of 2014 and indefinitely stalled the prospect of American airstrikes.The joint announcement, on the third day of intensive talks in Geneva, also set the stage for one of the most challenging undertakings in the history of arms control.�This situation has no precedent,� said Amy E. Smithson, an expert on chemical weapons at theJames Martin Center for Nonproliferation Studies. �They are cramming what would probably be five or six years� worth of work into a period of several months, and they are undertaking this in an extremely difficult security environment due to the ongoing civil war.�",
 			startHtml = "<style type='text/css'>body{font-size: 13;}h1{font-size: 14;font-family:serif;}table,th,td,tr {color:#000;width:700px;}</style><table><tr><td><img border='0' src='http://www.rmathur.com/images/BANNER.png' width=700></td></tr><tr><td><h1>Hey there! Look we what managed to find out about that boring lecture you weren't forced to sit though!</h1></td></tr><tr><td><p wdith=700>",
@@ -162,6 +160,19 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	public void parseData(View view) {
 		new AlchemyAsyncTask().execute();
+
+	}
+
+	public void startRawText(View view) {
+		Intent intent = new Intent(this, RawText.class);
+		intent.putExtra("message", recognizedText);
+		startActivity(intent);
+	}
+
+	public void startKeywords(View view) {
+		Intent intent = new Intent(this, Keywords.class);
+		intent.putExtra("message", emailContentsText);
+		startActivity(intent);
 	}
 
 	public void sendEmail() {
@@ -173,14 +184,15 @@ public class MainActivity extends Activity implements OnClickListener {
 				.getText().toString();
 		final String lectureName = ((EditText) findViewById(R.id.etLectureName))
 				.getText().toString();
-		
-    	Date date = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss");
-		
+
+		Date date = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss");
+
 		Document document = new Document();
-		String file = Environment.getExternalStorageDirectory().getPath() + "/" + dateFormat.format(date) + "deflecture.pdf";
+		String file = Environment.getExternalStorageDirectory().getPath() + "/"
+				+ dateFormat.format(date) + "deflecture.pdf";
 		try {
-			PdfWriter.getInstance(document,new FileOutputStream(file));
+			PdfWriter.getInstance(document, new FileOutputStream(file));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (DocumentException e) {
@@ -188,25 +200,25 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		document.open();
 		Paragraph p1 = new Paragraph(lectureName);
-		Paragraph p2 = new Paragraph(emailContents);
+		Paragraph p2 = new Paragraph(emailContentsText);
 		try {
 			document.add(p1);
 			document.add(p2);
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
-		document.close();		
-		
+		document.close();
+
 		SendGrid sendgrid = new SendGrid("rohan32", "hackru");
 		sendgrid.addTo(userEmail);
 		sendgrid.setFrom("DefNotes@defnotes.com");
 		sendgrid.setSubject("Your " + lectureName + " study guide here");
-		sendgrid.setHtml(startHtml + emailContents + endHtml);
+		sendgrid.setHtml(startHtml + emailContentsHTML + endHtml);
 		sendgrid.send();
 		Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT)
 				.show();
 	}
-	
+
 	public void findDefinitions() {
 		for (int i = 0; i < keywordsList.size(); i++) {
 			String term = keywordsList.get(i);
@@ -237,7 +249,8 @@ public class MainActivity extends Activity implements OnClickListener {
 				if (definitions.length() > 0) {
 					JSONObject definition = definitions.getJSONObject(0);
 					String definitionText = definition.getString("text");
-					emailContents += term + " : " + definitionText + "<br><br>";
+					emailContentsHTML += term + " : " + definitionText + "<br><br>";
+					emailContentsText += term + " : " + definitionText + "\n\n";
 				}
 				if (Integer.parseInt(id) >= keywordsList.size() - 1) {
 					sendEmail();
