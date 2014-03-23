@@ -41,14 +41,14 @@ public class MainActivity extends Activity implements OnClickListener {
 	        if (requestCode == REQUEST_OK  && resultCode == RESULT_OK) {
 	        		ArrayList<String> thingsSaid = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 	        		((TextView)findViewById(R.id.txtText)).setText(thingsSaid.get(0));
-	
 	        final String recognizedText = thingsSaid.get(0);
             Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run() {
                     try {
                         SendGrid sendgrid = new SendGrid("rohan32", "hackru");
-                        sendgrid.addTo("rohanmathur34@gmail.com");
+                        //sendgrid.addTo("rohanmathur34@gmail.com");
+                        sendgrid.addTo("mitranopeter@gmail.com");
                         sendgrid.setFrom("rohan@rmathur.com");
                         sendgrid.setSubject("Your SubjectName study guide here");
                         sendgrid.setText(recognizedText);
