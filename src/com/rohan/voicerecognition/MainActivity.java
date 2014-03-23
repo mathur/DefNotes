@@ -3,10 +3,18 @@ package com.rohan.voicerecognition;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -29,6 +37,53 @@ public class MainActivity extends Activity implements OnClickListener {
 		context = this;
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.about:
+                // if about is pressed, then open the dialog box
+                showDialog(1);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+	
+    @SuppressWarnings("deprecation")
+	@Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case 1:
+                // Create our About Dialog
+                TextView aboutMsg  = new TextView(this);
+                aboutMsg.setMovementMethod(LinkMovementMethod.getInstance());
+                aboutMsg.setPadding(30, 30, 30, 30);
+                aboutMsg.setText(Html.fromHtml("Recorder, summarizer, and distributor of lectures everywere.<br><br><font color='black'><small>Developed for hackBCA Spring 2014</small></font>"));
+
+                Builder builder = new AlertDialog.Builder(this);
+                builder.setView(aboutMsg)
+                        .setTitle(Html.fromHtml("<b><font color='black'>About LecMail</font></b>"))
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                return builder.create();
+        }
+        return super.onCreateDialog(id);
+    }
+    
 	@Override
 	public void onClick(View v) {
 		Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -64,8 +119,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     sendgrid.setFrom("info@lecmail.com");
                     sendgrid.setSubject("Your " + lectureName + " study guide here");
                     sendgrid.setText(recognizedText);
-                    sendgrid.send();
                     Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT).show();
+                    sendgrid.send();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
