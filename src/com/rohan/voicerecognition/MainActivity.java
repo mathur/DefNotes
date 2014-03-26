@@ -112,7 +112,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			Builder builder = new AlertDialog.Builder(this);
 			builder.setView(aboutMsg)
 					.setTitle(
-							Html.fromHtml("<b><font color='black'>About LecMail</font></b>"))
+							Html.fromHtml("<b><font color='black'>About DefNotes</font></b>"))
 					.setPositiveButton("OK",
 							new DialogInterface.OnClickListener() {
 								@Override
