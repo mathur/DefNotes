@@ -155,6 +155,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	public void parseData(View view) {
 		Toast.makeText(getApplicationContext(), "Submitting data... please wait",
 				Toast.LENGTH_LONG).show();
+		keywordsList.clear();
 		new AlchemyAsyncTask().execute();
 
 	}
