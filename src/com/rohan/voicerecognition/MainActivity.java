@@ -1,6 +1,7 @@
 ﻿package com.rohan.voicerecognition;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -46,10 +48,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.sendgrid.SendGrid;
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -67,15 +67,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	ArrayList<String> keywordsList = new ArrayList<String>(),
 			definitions = new ArrayList<String>();
 	Context context;
-	private static String FILE = "c:/temp/FirstPdf.pdf";
-	private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
-			Font.BOLD);
-	private static Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
-			Font.NORMAL, BaseColor.RED);
-	private static Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
-			Font.BOLD);
-	private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
-			Font.BOLD);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +86,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -177,6 +169,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		startActivity(intent);
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	public void sendEmail() {
 
 		Toast.makeText(getApplicationContext(), "Sending Email",
@@ -192,7 +185,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		Document document = new Document();
 		String file = Environment.getExternalStorageDirectory().getPath() + "/"
-				+ dateFormat.format(date) + "deflecture.pdf";
+				+ dateFormat.format(date) + "defnotes.pdf";
 		try {
 			PdfWriter.getInstance(document, new FileOutputStream(file));
 		} catch (FileNotFoundException e) {
@@ -216,6 +209,11 @@ public class MainActivity extends Activity implements OnClickListener {
 		sendgrid.setFrom("DefNotes@defnotes.com");
 		sendgrid.setSubject("Your " + lectureName + " study guide here");
 		sendgrid.setHtml(startHtml + emailContentsHTML + endHtml);
+		try {
+			sendgrid.addFile(new File(file));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		sendgrid.send();
 		Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT)
 				.show();
