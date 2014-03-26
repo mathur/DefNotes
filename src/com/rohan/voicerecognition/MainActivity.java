@@ -206,8 +206,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		SendGrid sendgrid = new SendGrid("rohan32", "hackru");
 		sendgrid.addTo(userEmail);
-		sendgrid.setFrom("defNotes@defnotes.com");
-		sendgrid.setSubject("Your " + lectureName + " study guide here");
+		sendgrid.setFrom("info@defnotes.com");
+		sendgrid.setSubject("Your " + lectureName + " study guide");
 		sendgrid.setHtml(startHtml + emailContentsHTML + endHtml);
 		try {
 			sendgrid.addFile(new File(file));
