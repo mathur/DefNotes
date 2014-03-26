@@ -217,6 +217,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		sendgrid.send();
 		Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT)
 				.show();
+		
+		File pdfFile = new File(file);
+		pdfFile.delete();
 	}
 
 	public void findDefinitions() {
