@@ -153,6 +153,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	public void parseData(View view) {
+		Toast.makeText(getApplicationContext(), "Submitting data... please wait",
+				Toast.LENGTH_LONG).show();
 		new AlchemyAsyncTask().execute();
 
 	}
@@ -171,9 +173,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@SuppressLint("SimpleDateFormat")
 	public void sendEmail() {
-
-		Toast.makeText(getApplicationContext(), "Sending Email",
-				Toast.LENGTH_SHORT).show();
 
 		final String userEmail = ((EditText) findViewById(R.id.editText1))
 				.getText().toString();
@@ -206,7 +205,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		SendGrid sendgrid = new SendGrid("rohan32", "hackru");
 		sendgrid.addTo(userEmail);
-		sendgrid.setFrom("DefNotes@defnotes.com");
+		sendgrid.setFrom("defNotes@defnotes.com");
 		sendgrid.setSubject("Your " + lectureName + " study guide here");
 		sendgrid.setHtml(startHtml + emailContentsHTML + endHtml);
 		try {
