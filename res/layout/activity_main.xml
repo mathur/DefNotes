@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Goldenrod"
     tools:context=".MainActivity" >
 
     <EditText
@@ -72,7 +71,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:background="@color/WhiteSmoke"
         android:onClick="parseData"
         android:text="@string/submit"
         android:textColor="@color/Black" />
@@ -89,7 +87,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@color/WhiteSmoke"
             android:onClick="startRawText"
             android:text="Raw Text" />
 
@@ -98,7 +95,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:background="@color/WhiteSmoke"
             android:onClick="startKeywords"
             android:text="Keywords" />
 
