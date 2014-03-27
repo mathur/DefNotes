@@ -23,7 +23,7 @@ public class Dictionary {
 
     static ArrayList<String> definitions = new ArrayList<String>();
 
-    Dictionary(){
+    Dictionary() {
         definitions.clear();
         findDefinitions();
     }
@@ -63,9 +63,12 @@ public class Dictionary {
                     Email.emailContentsHTML += term + " : " + definitionText
                             + "<br><br>";
                     Email.emailContentsText += term + " : " + definitionText + "\n\n";
+                } else {
+                    //if no definition, remove that keyword
+                    Alchemy.keywordsList.remove(Integer.parseInt(id));
                 }
                 if (Integer.parseInt(id) >= Alchemy.keywordsList.size() - 1) {
-                    MainActivity.email.sendEmail(MainActivity.userEmail,MainActivity.lectureName);
+                    MainActivity.email.sendEmail(MainActivity.userEmail, MainActivity.lectureName);
                 }
             } catch (JSONException e) {
                 Log.e("error", e.getMessage());

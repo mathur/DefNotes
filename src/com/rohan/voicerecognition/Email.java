@@ -2,11 +2,15 @@ package com.rohan.voicerecognition;
 
 import android.annotation.SuppressLint;
 import android.os.Environment;
+import android.util.Log;
 
 import com.github.sendgrid.SendGrid;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.File;
@@ -31,36 +35,38 @@ public class Email {
     }
 
     @SuppressLint("SimpleDateFormat")
-    public void sendEmail(String userEmail,String lectureName) {
-
+    public void sendEmail(String userEmail, String lectureName) {
         Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss");
 
         Document document = new Document();
         String file = Environment.getExternalStorageDirectory().getPath() + "/"
                 + dateFormat.format(date) + "defnotes.pdf";
+        Log.d("pdf location", file);
         try {
             PdfWriter.getInstance(document, new FileOutputStream(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (DocumentException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e("pdf get instance", e.getMessage());
         }
         document.open();
-        Paragraph p1 = new Paragraph(lectureName);
-        Paragraph p2 = new Paragraph(Email.emailContentsText);
+
         try {
+            Paragraph p1 = new Paragraph(lectureName);
             document.add(p1);
-            document.add(p2);
+            //Paragraph p2 = new Paragraph(Email.emailContentsText);
+            //document.add(p2);
+            PdfPTable table = createTable1();
+            document.add(table);
         } catch (DocumentException e) {
-            e.printStackTrace();
+            Log.e("pdf add p1/p2", e.getMessage());
         }
+
         document.close();
 
         SendGrid sendgrid = new SendGrid("rohan32", "hackru");
         sendgrid.addTo(userEmail);
-        sendgrid.setFrom("info@defnotes.com");
-        sendgrid.setSubject("Your " + lectureName + " study guide");
+        sendgrid.setFrom("study@defnotes.com");
+        sendgrid.setSubject("Your " + lectureName + " study guide!");
         sendgrid.setHtml(Email.startHtml + Email.emailContentsHTML + Email.endHtml);
         try {
             sendgrid.addFile(new File(file));
@@ -68,11 +74,34 @@ public class Email {
             e.printStackTrace();
         }
         sendgrid.send();
-//        Toast.makeText(context, "Email sent successfully.", Toast.LENGTH_SHORT)
-//                .show();
         File pdfFile = new File(file);
         pdfFile.delete();
     }
 
+    /**
+     * Creates a table; widths are set with setWidths().
+     *
+     * @return a PdfPTable
+     * @throws DocumentException
+     */
+    public static PdfPTable createTable1() throws DocumentException {
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(288 / 5.23f);
+        table.setWidths(new int[]{2, 1, 1});
+        PdfPCell cell;
+        cell = new PdfPCell(new Phrase("Vocabulary:"));
+        cell.setColspan(2);
+        table.addCell(cell);
+        cell = new PdfPCell(new Phrase("Cell with rowspan 2"));
+        cell.setRowspan(Dictionary.definitions.size());
+        table.addCell(cell);
 
+        //If we managed these lists right, the terms and definitions should match
+        for (int i = 0; i < Alchemy.keywordsList.size(); i++) {
+            String term = Alchemy.keywordsList.get(i);
+            String def = Dictionary.definitions.get(i);
+            table.addCell(term + ": " + def);
+        }
+        return table;
+    }
 }
