@@ -2,6 +2,7 @@ package com.rohan.voicerecognition;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -20,8 +21,9 @@ import java.util.StringTokenizer;
  * Created by Peter on 3/25/14.
  */
 public class Dictionary {
+	
 
-    static ArrayList<String> definitions = new ArrayList<String>();
+    static final ArrayList<String> definitions = new ArrayList<String>();
 
     Dictionary() {
         definitions.clear();
@@ -45,7 +47,6 @@ public class Dictionary {
             out.add(params[0]);
             out.add(output);
             out.add(params[1]);
-            Log.e("param 0", params[0]);
             return out;
         }
 
@@ -60,15 +61,18 @@ public class Dictionary {
                 if (definitions.length() > 0) {
                     JSONObject definition = definitions.getJSONObject(0);
                     String definitionText = definition.getString("text");
+                    Dictionary.definitions.add(definitionText);
+                    Log.e("definition", definitionText);
                     Email.emailContentsHTML += term + " : " + definitionText
                             + "<br><br>";
                     Email.emailContentsText += term + " : " + definitionText + "\n\n";
                 } else {
                     //if no definition, remove that keyword
+                    Log.e("def", "no defintion found");
                     Alchemy.keywordsList.remove(Integer.parseInt(id));
                 }
-                if (Integer.parseInt(id) >= Alchemy.keywordsList.size() - 1) {
-                    MainActivity.email.sendEmail(MainActivity.userEmail, MainActivity.lectureName);
+                if (Integer.parseInt(id) == Alchemy.keywordsList.size() - 1) {
+                   MainActivity.email.sendEmail(MainActivity.userEmail, MainActivity.lectureName);
                 }
             } catch (JSONException e) {
                 Log.e("error", e.getMessage());
@@ -77,7 +81,7 @@ public class Dictionary {
 
     }
 
-    public static String postDictionaryData(String word) {
+    private static String postDictionaryData(String word) {
         HttpClient httpclient = new DefaultHttpClient();
         // specify the URL you want to post to
         StringTokenizer stk = new StringTokenizer(word);

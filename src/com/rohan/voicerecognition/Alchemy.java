@@ -25,7 +25,8 @@ import java.util.List;
  */
 public class Alchemy {
 
-    static ArrayList<String> keywordsList = new ArrayList<String>();
+	
+    static final ArrayList<String> keywordsList = new ArrayList<String>();
 
     Alchemy() {
         keywordsList.clear();
@@ -35,8 +36,7 @@ public class Alchemy {
     private class AlchemyAsyncTask extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... params) {
-            String output = postAlchemyData();
-            return output;
+            return postAlchemyData();
         }
 
         protected void onPostExecute(String output) {
@@ -56,7 +56,7 @@ public class Alchemy {
 
     }
 
-    public String postAlchemyData() {
+    String postAlchemyData() {
         HttpClient httpclient = new DefaultHttpClient();
         // specify the URL you want to post to
         HttpPost httppost = new HttpPost(
@@ -76,7 +76,7 @@ public class Alchemy {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
                     response.getEntity().getContent(), "UTF-8"));
             StringBuilder builder = new StringBuilder();
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 builder.append(line).append("\n");
             }

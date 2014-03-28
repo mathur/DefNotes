@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 public class RawText extends Activity {
 
+	
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

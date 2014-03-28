@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 public class Keywords extends Activity {
+	
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

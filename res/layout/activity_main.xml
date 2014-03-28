@@ -61,6 +61,7 @@
             android:id="@+id/editText1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="mitranopeter@gmail.com"
             android:layout_weight="1"
             android:ems="10" />
     </LinearLayout>

@@ -1,9 +1,10 @@
-﻿package com.rohan.voicerecognition;
+package com.rohan.voicerecognition;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,17 +23,20 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements OnClickListener {
+	
 
-    protected static final int REQUEST_OK = 1;
+    private static final int REQUEST_OK = 1;
 
+    
     public static String recognizedText = "", userEmail = "", lectureName = "";
-    static Email email = new Email();
-
+    static final Email email = new Email();
+    static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MainActivity.context=this;
         findViewById(R.id.btnVoiceRecognize).setOnClickListener(this);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
@@ -46,8 +50,7 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     @SuppressWarnings("deprecation")
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    @Override   public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.about:
                 showDialog(1);

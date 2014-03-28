@@ -3,6 +3,7 @@ package com.rohan.voicerecognition;
 import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.github.sendgrid.SendGrid;
 import com.itextpdf.text.Document;
@@ -23,13 +24,14 @@ import java.util.Date;
 /**
  * Created by Peter on 3/25/14.
  */
-public class Email {
+
+class Email {
 
     public static String emailContentsHTML = "",
             emailContentsText = "";
-    public static final String intro = "Key Terms/Definitions:",
-            startHtml = "<style type='text/css'>body{font-size: 13;}h1{font-size: 14;font-family:serif;}table,th,td,tr {color:#000;width:700px;}</style><table><tr><td><img border='0' src='http://www.rmathur.com/images/BANNER.png' width=700></td></tr><tr><td><h1>Hey there! Look we what managed to find out about that boring lecture you weren't forced to sit though!</h1></td></tr><tr><td><p wdith=700>",
-            endHtml = "</p></td></tr></table>";
+    public static final String intro = "Key Terms/Definitions:";
+    private static final String startHtml = "<style type='text/css'>body{font-size: 13;}h1{font-size: 14;font-family:serif;}table,th,td,tr {color:#000;width:700px;}</style><table><tr><td><img border='0' src='http://www.rmathur.com/images/BANNER.png' width=700></td></tr><tr><td><h1>Hey there! Look we what managed to find out about that boring lecture you weren't forced to sit though!</h1></td></tr><tr><td><p wdith=700>";
+    private static final String endHtml = "</p></td></tr></table>";
 
     public Email() {
     }
@@ -53,9 +55,7 @@ public class Email {
         try {
             Paragraph p1 = new Paragraph(lectureName);
             document.add(p1);
-            //Paragraph p2 = new Paragraph(Email.emailContentsText);
-            //document.add(p2);
-            PdfPTable table = createTable1();
+            PdfPTable table = createTable();
             document.add(table);
         } catch (DocumentException e) {
             Log.e("pdf add p1/p2", e.getMessage());
@@ -74,6 +74,8 @@ public class Email {
             e.printStackTrace();
         }
         sendgrid.send();
+        Toast.makeText(MainActivity.context, "Email sent!", Toast.LENGTH_SHORT);
+        Log.e("email","sending email");
         File pdfFile = new File(file);
         pdfFile.delete();
     }
@@ -84,23 +86,18 @@ public class Email {
      * @return a PdfPTable
      * @throws DocumentException
      */
-    public static PdfPTable createTable1() throws DocumentException {
-        PdfPTable table = new PdfPTable(3);
-        table.setWidthPercentage(288 / 5.23f);
-        table.setWidths(new int[]{2, 1, 1});
-        PdfPCell cell;
-        cell = new PdfPCell(new Phrase("Vocabulary:"));
+    private static PdfPTable createTable() throws DocumentException {
+        PdfPTable table = new PdfPTable(2);
+        PdfPCell cell = new PdfPCell(new Phrase("Vocabulary:"));
         cell.setColspan(2);
-        table.addCell(cell);
-        cell = new PdfPCell(new Phrase("Cell with rowspan 2"));
-        cell.setRowspan(Dictionary.definitions.size());
         table.addCell(cell);
 
         //If we managed these lists right, the terms and definitions should match
-        for (int i = 0; i < Alchemy.keywordsList.size(); i++) {
+        for (int i = 0; i < Dictionary.definitions.size(); i++) {
             String term = Alchemy.keywordsList.get(i);
             String def = Dictionary.definitions.get(i);
-            table.addCell(term + ": " + def);
+            table.addCell(term);
+            table.addCell(def);
         }
         return table;
     }
